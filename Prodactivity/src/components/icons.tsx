@@ -58,6 +58,49 @@ export function SettingsIcon({ size = 22, color, active }: IconProps) {
   );
 }
 
+/** Feed — overlapping photo frames (social proof motif). */
+export function FeedIcon({ size = 22, color, active }: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill={active ? color : 'none'} stroke={color} strokeWidth={2} strokeLinejoin="round">
+      <Rect x="4" y="4" width="13" height="13" rx="3" />
+      <Rect x="8" y="8" width="13" height="13" rx="3" fill={active ? color : 'none'} />
+    </Svg>
+  );
+}
+
+/** Users — two friends. */
+export function UsersIcon({ size = 20, color }: { size?: number; color: string }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <Circle cx="9" cy="8" r="3.2" />
+      <Path d="M3.5 19a5.5 5.5 0 0 1 11 0" />
+      <Path d="M16 5.2a3.2 3.2 0 0 1 0 5.6" />
+      <Path d="M17 14.2A5.5 5.5 0 0 1 20.5 19" />
+    </Svg>
+  );
+}
+
+/** Camera — capture proof. */
+export function CameraIcon({ size = 20, color }: { size?: number; color: string }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <Path d="M3 8.5A1.5 1.5 0 0 1 4.5 7h2L8 5h8l1.5 2h2A1.5 1.5 0 0 1 21 8.5V18a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18z" />
+      <Circle cx="12" cy="13" r="3.4" />
+    </Svg>
+  );
+}
+
+/** Image — pick from gallery. */
+export function ImageIcon({ size = 20, color }: { size?: number; color: string }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <Rect x="4" y="4" width="16" height="16" rx="3" />
+      <Circle cx="9" cy="9.5" r="1.6" />
+      <Path d="M5 17l4.5-4.5a2 2 0 0 1 2.8 0L19 19" />
+    </Svg>
+  );
+}
+
 export function CheckIcon({ size = 20, color = '#fff', width = 3 }: { size?: number; color?: string; width?: number }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">

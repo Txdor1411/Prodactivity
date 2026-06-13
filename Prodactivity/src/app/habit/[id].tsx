@@ -1,5 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Alert, Pressable, ScrollView, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Glass } from '@/components/glass';
@@ -31,36 +32,34 @@ export default function HabitDetailScreen() {
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { habits, logFor, logHabit, removeHabit } = useStore();
+  const [confirming, setConfirming] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const habit = habits.find((h) => h.id === id);
 
+  const goBack = () => {
+    if (router.canGoBack()) router.back();
+    else router.replace('/habits');
+  };
+
   const onDelete = () => {
     if (!habit) return;
-    Alert.alert(
-      'Delete habit',
-      `Delete “${habit.name}”? This erases its history and can't be undone.`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => {
-            removeHabit(habit.id);
-            router.back();
-          },
-        },
-      ],
-    );
+    setDeleting(true);
+    removeHabit(habit.id);
+    goBack();
   };
 
   if (!habit) {
+    // Mid-delete: the habit is already gone but navigation hasn't settled —
+    // render nothing instead of flashing the "not found" fallback.
+    if (deleting) return <Wallpaper />;
     return (
       <Wallpaper>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24, gap: 12 }}>
           <Display size={18} weight="600">
             Habit not found
           </Display>
-          <Pressable onPress={() => router.back()} style={{ paddingHorizontal: 18, paddingVertical: 10, borderRadius: 14, backgroundColor: theme.accent }}>
+          <Pressable onPress={goBack} style={{ paddingHorizontal: 18, paddingVertical: 10, borderRadius: 14, backgroundColor: theme.accent }}>
             <Body size={14} weight="600" color="#fff">
               Go back
             </Body>
@@ -224,22 +223,62 @@ export default function HabitDetailScreen() {
         </View>
 
         {/* Delete */}
-        <Pressable
-          onPress={onDelete}
-          style={{
-            marginTop: 12,
-            height: 50,
-            borderRadius: 18,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: theme.glassBg,
-            borderWidth: 1,
-            borderColor: theme.glassBorder,
-          }}>
-          <Body size={14.5} weight="600" color={Palette.run}>
-            Delete habit
-          </Body>
-        </Pressable>
+        {confirming ? (
+          <View style={{ marginTop: 12, gap: 8 }}>
+            <Body size={12.5} secondary style={{ textAlign: 'center', marginBottom: 2 }}>
+              Delete “{habit.name}”? This erases its history and can&apos;t be undone.
+            </Body>
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              <Pressable
+                onPress={() => setConfirming(false)}
+                style={{
+                  flex: 1,
+                  height: 50,
+                  borderRadius: 18,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: theme.glassBg,
+                  borderWidth: 1,
+                  borderColor: theme.glassBorder,
+                }}>
+                <Body size={14.5} weight="600" color={theme.textSecondary}>
+                  Cancel
+                </Body>
+              </Pressable>
+              <Pressable
+                onPress={onDelete}
+                style={{
+                  flex: 1,
+                  height: 50,
+                  borderRadius: 18,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: Palette.run,
+                }}>
+                <Body size={14.5} weight="700" color="#fff">
+                  Delete forever
+                </Body>
+              </Pressable>
+            </View>
+          </View>
+        ) : (
+          <Pressable
+            onPress={() => setConfirming(true)}
+            style={{
+              marginTop: 12,
+              height: 50,
+              borderRadius: 18,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: theme.glassBg,
+              borderWidth: 1,
+              borderColor: theme.glassBorder,
+            }}>
+            <Body size={14.5} weight="600" color={Palette.run}>
+              Delete habit
+            </Body>
+          </Pressable>
+        )}
       </ScrollView>
 
       {/* Log today */}

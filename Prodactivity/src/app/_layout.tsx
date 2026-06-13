@@ -5,6 +5,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { ThemeProvider } from '@/design/theme';
 import { StoreProvider, useStore } from '@/design/store';
+import { SocialProvider } from '@/design/social';
 
 function Navigator() {
   const { ready } = useStore();
@@ -21,6 +22,8 @@ function Navigator() {
       <Stack.Screen name="create" options={{ presentation: 'modal' }} />
       <Stack.Screen name="profile" options={{ presentation: 'modal' }} />
       <Stack.Screen name="import" options={{ presentation: 'modal' }} />
+      <Stack.Screen name="compose" options={{ presentation: 'modal' }} />
+      <Stack.Screen name="friends" options={{ presentation: 'modal' }} />
     </Stack>
   );
 }
@@ -36,8 +39,10 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider>
         <StoreProvider>
-          <StatusBar style="auto" />
-          <Navigator />
+          <SocialProvider>
+            <StatusBar style="auto" />
+            <Navigator />
+          </SocialProvider>
         </StoreProvider>
       </ThemeProvider>
     </GestureHandlerRootView>

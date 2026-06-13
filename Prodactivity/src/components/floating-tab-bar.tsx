@@ -2,14 +2,14 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Glass } from '@/components/glass';
-import { HabitsIcon, GoalsIcon, InsightsIcon, SettingsIcon, TodayIcon } from '@/components/icons';
+import { FeedIcon, HabitsIcon, InsightsIcon, SettingsIcon, TodayIcon } from '@/components/icons';
 import { Body } from '@/components/text';
 import { useTheme } from '@/design/theme';
 
 const ICONS: Record<string, (p: { color: string; active: boolean }) => React.ReactElement> = {
   index: ({ color, active }) => <TodayIcon color={color} active={active} />,
   habits: ({ color, active }) => <HabitsIcon color={color} active={active} />,
-  goals: ({ color, active }) => <GoalsIcon color={color} active={active} />,
+  feed: ({ color, active }) => <FeedIcon color={color} active={active} />,
   insights: ({ color, active }) => <InsightsIcon color={color} active={active} />,
   settings: ({ color, active }) => <SettingsIcon color={color} active={active} />,
 };
@@ -17,7 +17,7 @@ const ICONS: Record<string, (p: { color: string; active: boolean }) => React.Rea
 const LABELS: Record<string, string> = {
   index: 'Today',
   habits: 'Habits',
-  goals: 'Goals',
+  feed: 'Feed',
   insights: 'Insights',
   settings: 'Settings',
 };
