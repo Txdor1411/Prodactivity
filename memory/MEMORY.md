@@ -1,0 +1,1 @@
+- [Expo SDK 55 pin](expo-sdk-55-pin.md) — app stays on SDK 55 because Play Store Expo Go doesn't support 56; don't upgrade.
