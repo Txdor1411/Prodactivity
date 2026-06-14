@@ -34,6 +34,7 @@ export default function TodayScreen() {
   const router = useRouter();
   const { profile, habitsForDay, logHabit } = useStore();
 
+  const firstName = profile.name.trim().split(/\s+/)[0] || 'there';
   const now = new Date();
   const todayIdx = weekdayMon0(now);
 
@@ -73,9 +74,8 @@ export default function TodayScreen() {
         {/* Header */}
         <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between' }}>
           <View>
-            <Display size={26} weight="600" lineHeight={29}>
-              {greeting(now.getHours())},{'\n'}
-              {profile.name}
+            <Display size={26} weight="600" lineHeight={31}>
+              {greeting(now.getHours())}, {firstName}!
             </Display>
             <Body size={13} weight="500" secondary style={{ marginTop: 7 }}>
               {dateLabel}

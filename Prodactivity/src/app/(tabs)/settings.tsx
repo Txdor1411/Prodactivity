@@ -8,7 +8,7 @@ import { Screen } from '@/components/screen';
 import { Segmented } from '@/components/segmented';
 import { Body, Display } from '@/components/text';
 import { useAuth } from '@/design/auth';
-import { useStore } from '@/design/store';
+import { MAX_FREEZES, useStore } from '@/design/store';
 import { useTheme, useThemePref } from '@/design/theme';
 import { Palette, tint } from '@/design/tokens';
 
@@ -53,7 +53,7 @@ export default function SettingsScreen() {
   const theme = useTheme();
   const router = useRouter();
   const { pref, setPref } = useThemePref();
-  const { profile } = useStore();
+  const { profile, freezes } = useStore();
   const { configured, session, user, signOut } = useAuth();
   const [reminders, setReminders] = useState(true);
 
@@ -163,11 +163,11 @@ export default function SettingsScreen() {
               Streak freeze
             </Display>
             <Body size={12} secondary style={{ marginLeft: 'auto' }}>
-              2 of 3 left
+              {freezes} of {MAX_FREEZES} left
             </Body>
           </View>
           <View style={{ flexDirection: 'row', gap: 9 }}>
-            {[true, true, false].map((active, i) => (
+            {Array.from({ length: MAX_FREEZES }, (_, i) => i < freezes).map((active, i) => (
               <View
                 key={i}
                 style={{

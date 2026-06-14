@@ -129,10 +129,10 @@ export default function OnboardingScreen() {
         {step === 1 && (
           <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingTop: 14, paddingBottom: 20 }}>
             <Display size={26} weight="700">
-              Set up your profile
+              What should we call you?
             </Display>
             <Body size={14} secondary style={{ marginTop: 6, marginBottom: 22 }}>
-              This is how you’ll show up to friends.
+              Your name and how friends find you.
             </Body>
 
             <View style={{ alignItems: 'center', marginBottom: 22 }}>

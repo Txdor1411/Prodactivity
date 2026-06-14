@@ -39,7 +39,7 @@ export type Profile = { name: string; emoji: string; username?: string };
 /** habitId → (YYYY-MM-DD → amount logged that day). */
 export type Logs = Record<string, Record<string, number>>;
 
-type Persisted = { habits: HabitDef[]; logs: Logs; profile: Profile };
+type Persisted = { habits: HabitDef[]; logs: Logs; profile: Profile; freezes?: number };
 
 /** On-disk shape: the exportable data plus which account the cache belongs to. */
 type Cached = Persisted & { ownerId?: string | null };
@@ -53,6 +53,9 @@ export type HabitView = HabitDef & {
 
 const STORAGE_KEY = 'prodactivity:v1';
 const ALL_DAYS = [true, true, true, true, true, true, true];
+
+/** Streak-freeze tokens every account starts with (spend to save a missed day). */
+export const MAX_FREEZES = 3;
 
 const SEED_HABITS: HabitDef[] = [
   { id: 'water', emoji: '💧', name: 'Drink water', sub: 'glasses', accent: Palette.water, type: 'count', goal: 8, days: ALL_DAYS },
@@ -165,6 +168,8 @@ type StoreValue = {
   updateHabit: (id: string, patch: Partial<HabitDef>) => void;
   removeHabit: (id: string) => void;
   setProfile: (patch: Partial<Profile>) => void;
+  /** Remaining streak-freeze tokens (starts at MAX_FREEZES). */
+  freezes: number;
   /** Replace everything (used by JSON import). */
   replaceAll: (data: Persisted) => void;
   exportData: () => Persisted;
@@ -181,6 +186,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [habits, setHabits] = useState<HabitDef[]>(SEED_HABITS);
   const [logs, setLogs] = useState<Logs>({});
   const [profile, setProfileState] = useState<Profile>(SEED_PROFILE);
+  const [freezes, setFreezes] = useState(MAX_FREEZES);
   const [ownerId, setOwnerId] = useState<string | null>(null);
 
   // Latest values for use inside effects/callbacks without re-subscribing.
@@ -214,6 +220,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           if (data.habits) setHabits(data.habits);
           if (data.logs) setLogs(data.logs);
           if (data.profile) setProfileState({ ...SEED_PROFILE, ...data.profile });
+          if (typeof data.freezes === 'number') setFreezes(data.freezes);
           if (data.ownerId !== undefined) setOwnerId(data.ownerId);
         }
       } catch {
@@ -235,8 +242,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       first.current = false;
       return;
     }
-    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify({ habits, logs, profile, ownerId } satisfies Cached)).catch(() => {});
-  }, [ready, habits, logs, profile, ownerId]);
+    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify({ habits, logs, profile, freezes, ownerId } satisfies Cached)).catch(() => {});
+  }, [ready, habits, logs, profile, freezes, ownerId]);
 
   // Reconcile with the backend whenever a user signs in.
   useEffect(() => {
@@ -376,6 +383,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setHabits(habits);
       setLogs(logs);
       setProfileState(profile);
+      setFreezes(typeof data.freezes === 'number' ? data.freezes : MAX_FREEZES);
       // Push the imported data up so the account reflects it too.
       fireRemote(async () => {
         const migrated = await migrateLocalToRemote(userIdRef.current!, habits, logs, profile);
@@ -386,7 +394,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [fireRemote],
   );
 
-  const exportData = useCallback((): Persisted => ({ habits, logs, profile }), [habits, logs, profile]);
+  const exportData = useCallback((): Persisted => ({ habits, logs, profile, freezes }), [habits, logs, profile, freezes]);
 
   const value = useMemo<StoreValue>(
     () => ({
@@ -402,10 +410,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       updateHabit,
       removeHabit,
       setProfile,
+      freezes,
       replaceAll,
       exportData,
     }),
-    [ready, syncing, habits, profile, habitsForDay, logFor, logHabit, setAmount, addHabit, updateHabit, removeHabit, setProfile, replaceAll, exportData],
+    [ready, syncing, habits, profile, habitsForDay, logFor, logHabit, setAmount, addHabit, updateHabit, removeHabit, setProfile, freezes, replaceAll, exportData],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

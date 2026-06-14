@@ -15,9 +15,9 @@ export function TodayIcon({ size = 22, color }: IconProps) {
 }
 
 /** Habits — scattered small squares (mosaic motif). */
-export function HabitsIcon({ size = 22, color, active }: IconProps) {
+export function HabitsIcon({ size = 22, color }: IconProps) {
   return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill={active ? color : 'none'} stroke={active ? 'none' : color} strokeWidth={2}>
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2}>
       <Rect x="3" y="11" width="4" height="4" rx="1.2" />
       <Rect x="10" y="6" width="4" height="4" rx="1.2" />
       <Rect x="17" y="9" width="4" height="4" rx="1.2" />
@@ -59,11 +59,11 @@ export function SettingsIcon({ size = 22, color, active }: IconProps) {
 }
 
 /** Feed — overlapping photo frames (social proof motif). */
-export function FeedIcon({ size = 22, color, active }: IconProps) {
+export function FeedIcon({ size = 22, color }: IconProps) {
   return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill={active ? color : 'none'} stroke={color} strokeWidth={2} strokeLinejoin="round">
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinejoin="round">
       <Rect x="4" y="4" width="13" height="13" rx="3" />
-      <Rect x="8" y="8" width="13" height="13" rx="3" fill={active ? color : 'none'} />
+      <Rect x="8" y="8" width="13" height="13" rx="3" />
     </Svg>
   );
 }
