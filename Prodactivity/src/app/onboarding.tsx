@@ -99,7 +99,7 @@ export default function OnboardingScreen() {
                 <Body size={52}>🦊</Body>
               </View>
               <Display size={30} weight="700" style={{ textAlign: 'center' }}>
-                Welcome to Prodactivity
+                Welcome to Streakr
               </Display>
               <Body size={15} secondary style={{ textAlign: 'center', marginTop: 8, lineHeight: 21 }}>
                 Tiny daily wins, real streaks, and friends to keep you honest.
@@ -240,7 +240,7 @@ export default function OnboardingScreen() {
           {step === 2 && (
             <>
               {session
-                ? primaryButton('Start using Prodactivity', finish)
+                ? primaryButton('Start using Streakr', finish)
                 : configured
                   ? primaryButton('Sign in or create account', () => router.push('/auth'))
                   : primaryButton('Get started', finish)}

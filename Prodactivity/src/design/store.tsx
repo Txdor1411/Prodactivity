@@ -58,7 +58,7 @@ export type HabitView = HabitDef & {
   done: boolean;
 };
 
-const STORAGE_KEY = 'prodactivity:v1';
+const STORAGE_KEY = 'streakr:v1';
 const ALL_DAYS = [true, true, true, true, true, true, true];
 
 /** Streak-freeze tokens every account starts with (spend to save a missed day). */

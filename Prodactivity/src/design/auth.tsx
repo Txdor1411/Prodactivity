@@ -19,7 +19,7 @@ import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 // Lets the in-app browser dismiss itself when the OAuth redirect returns.
 WebBrowser.maybeCompleteAuthSession();
 
-/** Deep link the OAuth provider redirects back to (uses the `prodactivity` scheme). */
+/** Deep link the OAuth provider redirects back to (uses the `streakr` scheme). */
 const redirectTo = AuthSession.makeRedirectUri();
 
 export type OAuthProvider = 'google' | 'apple';

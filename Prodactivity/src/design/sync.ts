@@ -178,7 +178,7 @@ export async function uploadAvatar(userId: string, localUri: string): Promise<st
 
 // ----------------------------------------------------------- pending queue
 
-const QUEUE_KEY = 'prodactivity:pending';
+const QUEUE_KEY = 'streakr:pending';
 
 export async function savePending(op: PendingOp): Promise<void> {
   try {

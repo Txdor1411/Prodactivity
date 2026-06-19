@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "Prodactivity",
-    "slug": "Prodactivity",
+    "name": "Streakr",
+    "slug": "Streakr",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "prodactivity",
+    "scheme": "streakr",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon",
-      "bundleIdentifier": "com.prodactivity.app",
+      "bundleIdentifier": "com.streakr.app",
       "usesAppleSignIn": true
     },
     "android": {
@@ -20,7 +20,7 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.prodactivity.app"
+      "package": "com.streakr.app"
     },
     "web": {
       "output": "static",

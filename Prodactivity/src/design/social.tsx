@@ -72,7 +72,7 @@ type Persisted = {
 /** On-disk shape: the cache plus which account it belongs to (null = demo). */
 type Cached = Persisted & { ownerId?: string | null };
 
-const STORAGE_KEY = 'prodactivity:social:v1';
+const STORAGE_KEY = 'streakr:social:v1';
 const HOUR = 3600_000;
 const now = Date.now();
 

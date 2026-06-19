@@ -9,7 +9,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
-const STORAGE_KEY = 'prodactivity:onboarded:v1';
+const STORAGE_KEY = 'streakr:onboarded:v1';
 
 type OnboardingValue = {
   /** False until the persisted flag has been read. */

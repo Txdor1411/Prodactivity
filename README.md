@@ -1,7 +1,9 @@
-### Prodactiviy / name here
+### Streakr
+Your friends are watching. Literally.
 
-// subtitle, logo, etc
 
+
+![Logo](Prodactivity/assets/images/logo-glow.png)
 
 <details>
 
@@ -13,7 +15,7 @@ Hi, my name is Tudor!👋
 
 - I am a 17 yo who studies maths and computer science at a pretty prestigious high school. My coleagues and I get along very well and we have always used the hardships of school to bond with each other. (This was a big part of the motivation for this project!)
 - My hobbies/passions include sports (gym, running, swimming), coding, volunteering and video editing!
-- I have always been fascinated about computers, apps and lately about artificial intelligence. 
+- I have always been fascinated with computers, apps and lately about artificial intelligence. 
 - My dream is to one day work at a big AI tech company such as Anthropic, OpenAI or Deepmind.
 - Until then, I build apps and websites and try to get better and build skills which will help
 me achieve my dream.
