@@ -3,7 +3,7 @@ Your friends are watching. Literally.
 
 
 
-![Logo](Prodactivity/assets/images/logo-glow.png)
+![Logo](Prodactivity/assets/images/logo.svg)
 
 <details>
 
