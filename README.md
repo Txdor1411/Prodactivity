@@ -3,7 +3,7 @@ Your friends are watching. Literally.
 
 
 
-![Logo](Prodactivity/assets/images/logo.svg)
+<img src="Prodactivity/assets/images/logo.svg" width="100" fill="#000000" />
 
 <details>
 
