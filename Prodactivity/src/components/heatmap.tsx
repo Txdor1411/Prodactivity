@@ -2,7 +2,10 @@ import { useMemo } from 'react';
 import { View } from 'react-native';
 
 import { useTheme } from '@/design/theme';
-import { shade } from '@/design/tokens';
+import { Palette, shade } from '@/design/tokens';
+
+/** Ice-blue used for frozen (protected) cells. */
+const FREEZE_COLOR = Palette.freeze + '99';
 
 type HeatmapProps = {
   levels: number[];
@@ -68,7 +71,12 @@ export function Heatmap({
                 flex: 1,
                 aspectRatio: 1,
                 borderRadius: radius,
-                backgroundColor: level == null ? 'transparent' : shade(theme, accent, level),
+                backgroundColor:
+                  level == null
+                    ? 'transparent'
+                    : level === -1
+                      ? FREEZE_COLOR
+                      : shade(theme, accent, level),
               }}
             />
           ))}
@@ -78,8 +86,8 @@ export function Heatmap({
   );
 }
 
-/** Less ▢▢▢▢▢ More legend strip. */
-export function HeatmapLegend({ accent }: { accent: string }) {
+/** Less ▢▢▢▢▢ More legend strip. Pass showFreeze to append an ice cell. */
+export function HeatmapLegend({ accent, showFreeze = false }: { accent: string; showFreeze?: boolean }) {
   const theme = useTheme();
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
@@ -89,6 +97,9 @@ export function HeatmapLegend({ accent }: { accent: string }) {
           style={{ width: 9, height: 9, borderRadius: 2, backgroundColor: shade(theme, accent, l) }}
         />
       ))}
+      {showFreeze && (
+        <View style={{ width: 9, height: 9, borderRadius: 2, backgroundColor: FREEZE_COLOR, marginLeft: 3 }} />
+      )}
     </View>
   );
 }

@@ -46,7 +46,7 @@ function AnimatedCard({ index, children }: { index: number; children: ReactNode 
 export default function TodayScreen() {
   const theme = useTheme();
   const router = useRouter();
-  const { profile, habitsForDay, logHabit, frozenDates } = useStore();
+  const { profile, habitsForDay, logHabit, frozenDates, freezes, freezeDay } = useStore();
 
   const firstName = profile.name.trim().split(/\s+/)[0] || 'there';
   const avatarScale = useSharedValue(1);
@@ -56,15 +56,26 @@ export default function TodayScreen() {
   const now = new Date();
   const todayIdx = weekdayMon0(now);
 
+  // Yesterday's freeze eligibility.
+  const yd = new Date(now);
+  yd.setDate(now.getDate() - 1);
+  const ydKey = dateKey(yd);
+  const ydIdx = weekdayMon0(yd);
+  const ydHabits = habitsForDay(ydKey).filter((h) => h.days[ydIdx]);
+  const ydMissed = ydHabits.some((h) => !h.done);
+  const canFreezeYesterday = freezes > 0 && !frozenDates.has(ydKey) && ydMissed;
+
   // This week's strip (Mon→Sun), with a "perfect day" dot.
   const monday = new Date(now);
   monday.setDate(now.getDate() - todayIdx);
   const week = WEEKDAY_LABELS.map((label, i) => {
     const d = new Date(monday);
     d.setDate(monday.getDate() + i);
-    const dayHabits = habitsForDay(dateKey(d)).filter((h) => h.days[i]);
+    const dk = dateKey(d);
+    const dayHabits = habitsForDay(dk).filter((h) => h.days[i]);
     const done = dayHabits.length > 0 && dayHabits.every((h) => h.done);
-    return { d: label, n: d.getDate(), done, today: i === todayIdx };
+    const frozen = frozenDates.has(dk) && dayHabits.some((h) => !h.done);
+    return { d: label, n: d.getDate(), done, frozen, today: i === todayIdx };
   });
 
   // Today's scheduled habits.
@@ -151,6 +162,44 @@ export default function TodayScreen() {
             </View>
         </Glass>
 
+        {/* Freeze yesterday banner */}
+        {canFreezeYesterday && (
+          <Pressable
+            onPress={() => freezeDay(ydKey)}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 10,
+              padding: 12,
+              marginTop: 10,
+              borderRadius: 18,
+              backgroundColor: tint(Palette.freeze, theme.scheme === 'dark' ? '22' : '18'),
+              borderWidth: 1,
+              borderColor: tint(Palette.freeze, '40'),
+            }}>
+            <Body size={20}>🧊</Body>
+            <View style={{ flex: 1 }}>
+              <Body size={13} weight="600" color={theme.scheme === 'dark' ? '#c8d8ff' : Palette.freeze}>
+                Protect yesterday
+              </Body>
+              <Body size={11} secondary style={{ marginTop: 2 }}>
+                Freeze all missed habits · {freezes} token{freezes !== 1 ? 's' : ''} left
+              </Body>
+            </View>
+            <View
+              style={{
+                paddingHorizontal: 11,
+                paddingVertical: 6,
+                borderRadius: 11,
+                backgroundColor: tint(Palette.freeze, '33'),
+              }}>
+              <Body size={12} weight="700" color={theme.scheme === 'dark' ? '#c8d8ff' : Palette.freeze}>
+                Use freeze
+              </Body>
+            </View>
+          </Pressable>
+        )}
+
         {/* Weekday strip */}
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 15 }}>
           {week.map((day) => (
@@ -176,7 +225,7 @@ export default function TodayScreen() {
                   width: 5,
                   height: 5,
                   borderRadius: 3,
-                  backgroundColor: day.done ? Palette.emerald : 'transparent',
+                  backgroundColor: day.done ? Palette.emerald : day.frozen ? Palette.freeze : 'transparent',
                 }}
               />
             </View>

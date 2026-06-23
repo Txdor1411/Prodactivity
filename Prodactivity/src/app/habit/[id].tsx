@@ -89,6 +89,7 @@ export default function HabitDetailScreen() {
   const now = new Date();
   const levels: number[] = [];
   let yearCompleted = 0;
+  let hasFrozenDays = false;
   const weekdayHits = [0, 0, 0, 0, 0, 0, 0];
   const weekdayTotals = [0, 0, 0, 0, 0, 0, 0];
   let totalLogged = 0;
@@ -96,15 +97,19 @@ export default function HabitDetailScreen() {
   for (let i = 363; i >= 0; i--) {
     const d = new Date(now);
     d.setDate(now.getDate() - i);
-    const amount = log[dateKey(d)] ?? 0;
-    levels.push(levelFor(habit, amount));
+    const dk = dateKey(d);
+    const amount = log[dk] ?? 0;
     const complete = amount >= habit.goal;
     const wd = weekdayMon0(d);
+    // A frozen cell: day is in frozenDates, habit was scheduled, and not yet completed.
+    const isFrozen = !complete && frozenDates.has(dk) && habit.days[wd];
+    if (isFrozen) hasFrozenDays = true;
+    levels.push(isFrozen ? -1 : levelFor(habit, amount));
     if (habit.days[wd]) {
       weekdayTotals[wd]++;
-      if (complete) weekdayHits[wd]++;
+      if (complete || isFrozen) weekdayHits[wd]++;
     }
-    if (complete) yearCompleted++;
+    if (complete || isFrozen) yearCompleted++;
     if (amount > 0) {
       totalLogged++;
       countSum += amount;
@@ -226,7 +231,7 @@ export default function HabitDetailScreen() {
             <Body size={9.5} muted>
               Less
             </Body>
-            <HeatmapLegend accent={accent} />
+            <HeatmapLegend accent={accent} showFreeze={hasFrozenDays} />
             <Body size={9.5} muted>
               More
             </Body>

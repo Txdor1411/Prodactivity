@@ -24,7 +24,7 @@ function weekdayMon0(d: Date) {
   return (d.getDay() + 6) % 7;
 }
 
-type DayStat = { date: Date; rate: number | null; doneCount: number; active: boolean };
+type DayStat = { date: Date; rate: number | null; doneCount: number; active: boolean; frozen: boolean };
 
 function rateToLevel(rate: number | null) {
   if (rate == null || rate <= 0) return 0;
@@ -35,13 +35,14 @@ export default function InsightsScreen() {
   const theme = useTheme();
   const [range, setRange] = useState<Range>('W');
   const stroke = theme.accent;
-  const { habits, logFor } = useStore();
+  const { habits, logFor, frozenDates } = useStore();
 
   const data = useMemo(() => {
     const habitLogs = habits.map((h) => ({ h, log: logFor(h.id) }));
     const dayStat = (date: Date): DayStat => {
       const wd = weekdayMon0(date);
       const key = dateKey(date);
+      const frozen = frozenDates.has(key);
       let scheduled = 0;
       let scheduledDone = 0;
       let doneCount = 0;
@@ -56,7 +57,13 @@ export default function InsightsScreen() {
           if (met) scheduledDone++;
         }
       }
-      return { date, rate: scheduled > 0 ? scheduledDone / scheduled : null, doneCount, active };
+      // Frozen days count as fully completed for streak-consistent stats.
+      if (frozen && scheduled > 0) {
+        active = true;
+        doneCount += scheduled - scheduledDone;
+        scheduledDone = scheduled;
+      }
+      return { date, rate: scheduled > 0 ? scheduledDone / scheduled : null, doneCount, active, frozen };
     };
 
     // Build a long history once (covers the largest window + previous window).
@@ -116,11 +123,11 @@ export default function InsightsScreen() {
 
     // Consistency: last 98 days density + % of days active.
     const density = lastN(DENSITY_DAYS);
-    const densityLevels = density.map((d) => rateToLevel(d.rate));
+    const densityLevels = density.map((d) => (d.frozen ? -1 : rateToLevel(d.rate)));
     const activePct = Math.round((density.filter((d) => d.active).length / DENSITY_DAYS) * 100);
 
     return { momentum, curAvg, avgDelta, trend, axis, weekday, densityLevels, activePct };
-  }, [habits, logFor, range]);
+  }, [habits, logFor, frozenDates, range]);
 
   const rising = data.momentum >= 0;
   const trendPoints = data.trend.length > 1 ? data.trend.map((v, i) => `${((i / (data.trend.length - 1)) * 300).toFixed(1)},${(96 - (Math.max(0, Math.min(100, v)) / 100) * 82).toFixed(1)}`).join(' ') : '0,96 300,96';
