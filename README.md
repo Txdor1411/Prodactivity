@@ -3,7 +3,7 @@ Your friends are watching. Literally.
 
 
 
-<img src="Prodactivity/assets/images/logo.svg" width="100" fill="#000000" />
+<p align="center"><img src="Prodactivity/assets/images/logo.svg" width="100" style="filter: brightness(0);" /></p>
 
 <details>
 
