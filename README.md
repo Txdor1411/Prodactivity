@@ -1,9 +1,7 @@
-### Streakr
-Your friends are watching. Literally.
+<h3 align="center">Streakr</h3>
+<p align="center">Your friends are watching. Literally.</p>
 
-
-
-<p align="center"><img src="Prodactivity/assets/images/logo.svg" width="100" style="filter: brightness(0);" /></p>
+<p align="center"><img src="Prodactivity/assets/images/logo.svg" width="100" /></p>
 
 <details>
 
